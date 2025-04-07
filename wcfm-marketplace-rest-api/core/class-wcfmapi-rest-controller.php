@@ -16,6 +16,7 @@ abstract class WCFM_REST_Controller extends WP_REST_Controller {
      * @return object WC_Data object or WP_Error object.
      */
     protected function get_object( $id ) {
+        /* translators: %s is the method name that is not implemented */ 
         return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'wcfm-marketplace-rest-api' ), __METHOD__ ), array( 'status' => 405 ) );
     }
 
@@ -170,6 +171,7 @@ abstract class WCFM_REST_Controller extends WP_REST_Controller {
         $result = 0 === $object->get_id();
 
         if ( ! $result ) {
+            /* translators: %s is the post type that cannot be deleted. */
             return new WP_Error( 'wcfmapi_rest_cannot_delete', sprintf( __( 'The %s cannot be deleted.', 'wcfm-marketplace-rest-api' ), $this->post_type ), array( 'status' => 500 ) );
         }
 
@@ -186,6 +188,7 @@ abstract class WCFM_REST_Controller extends WP_REST_Controller {
      * @return void
      */
     protected function prepare_object_for_database( $request ) {
+        /* translators: %s is the method name that is not implemented. */
         return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'wcfm-marketplace-rest-api' ), __METHOD__ ), array( 'status' => 405 ) );
     }
 
@@ -260,6 +263,7 @@ abstract class WCFM_REST_Controller extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
      */
     protected function prepare_data_for_response( $object, $request ) {
+        /* translators: %s is the method name that is not implemented. */
         return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'wcfm-marketplace-rest-api' ), __METHOD__ ), array( 'status' => 405 ) );
     }
 

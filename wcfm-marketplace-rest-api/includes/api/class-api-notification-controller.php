@@ -71,7 +71,7 @@ class WCFM_REST_Notification_Controller extends WCFM_REST_Controller {
     global $WCFM;
     $_POST["controller"] = 'wcfm-messages';
     $_POST['length'] = !empty($request['per_page']) ? intval($request['per_page']) : 10;
-    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0;
+    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- False positive
     //print_r($request['page']); die;
 //    if(empty($request['page'])){
 //      $_POST['start'] = !empty($request['offset']) ? intval($request['offset']) : 0;
@@ -97,7 +97,7 @@ class WCFM_REST_Notification_Controller extends WCFM_REST_Controller {
         $notification->is_pined,
         $notification->message_to
       );
-      $notification->message = strip_tags($notification->message);
+      $notification->message = wp_strip_all_tags($notification->message);
     }
     
 //    $response = rest_ensure_response($notifications);

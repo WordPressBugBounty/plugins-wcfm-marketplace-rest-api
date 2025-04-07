@@ -70,7 +70,7 @@ class WCFM_REST_User_Profile_Controller extends WC_REST_Customers_Controller {
     $user_data = get_userdata($id);
 
     if (empty($id) || empty($user_data->ID)) {
-      return new WP_Error('woocommerce_rest_invalid_id', __('Invalid resource ID.', 'woocommerce'), array('status' => 404));
+      return new WP_Error('woocommerce_rest_invalid_id', __('Invalid resource ID.', 'woocommerce'), array('status' => 404)); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
     }
 
     $customer = $this->prepare_item_for_response($user_data, $request);
@@ -99,15 +99,15 @@ class WCFM_REST_User_Profile_Controller extends WC_REST_Customers_Controller {
 
 
       if (!$customer->get_id()) {
-        throw new WC_REST_Exception('woocommerce_rest_invalid_id', __('Invalid resource ID.', 'woocommerce'), 400);
+        throw new WC_REST_Exception('woocommerce_rest_invalid_id', __('Invalid resource ID.', 'woocommerce'), 400); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
       }
 
       if (!empty($request['email']) && email_exists($request['email']) && $request['email'] !== $customer->get_email()) {
-        throw new WC_REST_Exception('woocommerce_rest_customer_invalid_email', __('Email address is invalid.', 'woocommerce'), 400);
+        throw new WC_REST_Exception('woocommerce_rest_customer_invalid_email', __('Email address is invalid.', 'woocommerce'), 400); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
       }
 
       if (!empty($request['username']) && $request['username'] !== $customer->get_username()) {
-        throw new WC_REST_Exception('woocommerce_rest_customer_invalid_argument', __("Username isn't editable.", 'woocommerce'), 400);
+        throw new WC_REST_Exception('woocommerce_rest_customer_invalid_argument', __("Username isn't editable.", 'woocommerce'), 400); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
       }
 
       // Customer email.
@@ -218,7 +218,8 @@ class WCFM_REST_User_Profile_Controller extends WC_REST_Customers_Controller {
         "status" => wc_get_order_status_name($order->get_status()),
         "total" => $order->get_total(),
         "item_count" => $item_count,
-        "total_html" => sprintf(_n('%1$s for %2$s item', '%1$s for %2$s items', $item_count, 'woocommerce'), $order->get_formatted_order_total(), $item_count),
+        /* translators: %1$s is the formatted order total, %2$s is the item count. */
+        "total_html" => sprintf(_n('%1$s for %2$s item', '%1$s for %2$s items', $item_count, 'woocommerce'), $order->get_formatted_order_total(), $item_count), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
       );
     }
     return $order_array;
@@ -233,14 +234,14 @@ class WCFM_REST_User_Profile_Controller extends WC_REST_Customers_Controller {
     $params = parent::get_collection_params();
 
     $params['order'] = array(
-      'description'        => __('Order sort attribute ascending or descending.', 'woocommerce'),
+      'description'        => __('Order sort attribute ascending or descending.', 'woocommerce'), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
       'type'               => 'string',
       'default'            => 'desc',
       'enum'               => array('asc', 'desc'),
       'validate_callback'  => 'rest_validate_request_arg',
     );
     $params['orderby'] = array(
-      'description'        => __('Sort collection by object attribute.', 'woocommerce'),
+      'description'        => __('Sort collection by object attribute.', 'woocommerce'), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
       'type'               => 'string',
       'default'            => 'date',
       'enum'               => array(

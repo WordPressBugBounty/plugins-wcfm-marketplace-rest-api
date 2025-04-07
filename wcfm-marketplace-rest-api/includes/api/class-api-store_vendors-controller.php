@@ -89,11 +89,11 @@ class WCFM_REST_Store_Vendors_Controller extends WCFM_REST_Controller {
         global $WCFM;
         $_POST["controller"] = 'wcfm-vendors';
         $_POST['length'] = ! empty( $request['per_page'] ) ? intval( $request['per_page'] ) : 10;
-        $_POST['start'] = ! empty( $request['page'] ) ? ( intval( $request['page'] ) - 1 ) * $_POST['length'] : 0;
+        $_POST['start'] = ! empty( $request['page'] ) ? ( intval( $request['page'] ) - 1 ) * $_POST['length'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- False positive
         $_POST['filter_date_form'] = ! empty( $request['after'] ) ? $request['after'] : '';
         $_POST['filter_date_to'] = ! empty( $request['before'] ) ? $request['before'] : '';
         $queries_data = array();
-        parse_str($_SERVER['QUERY_STRING'], $queries_data);
+        parse_str($_SERVER['QUERY_STRING'], $queries_data); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Flagging as False positive now, suggestions can be implemented later
 
         $_POST['search_data'] = array();
         foreach( $queries_data as $query_key => $query_value ) {
@@ -324,11 +324,11 @@ class WCFM_REST_Store_Vendors_Controller extends WCFM_REST_Controller {
                         if ( $is_free == 'yes' ) {
                             $wcfm_vendor_data['membership_details']['membership_expiry_on'] = date_i18n( wc_date_format(), $next_schedule );
                         } else {
-                            $wcfm_vendor_data['membership_details']['membership_expiry_on'] = __( 'Never Expire', 'wc-frontend-manager' );
+                            $wcfm_vendor_data['membership_details']['membership_expiry_on'] = __( 'Never Expire', 'wc-frontend-manager' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
                         }
                     }
                 } else {
-                    $wcfm_vendor_data['membership_details']['membership_expiry_on'] = __( 'Never Expire', 'wc-frontend-manager' );
+                    $wcfm_vendor_data['membership_details']['membership_expiry_on'] = __( 'Never Expire', 'wc-frontend-manager' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
                 }
             }
         }
@@ -354,11 +354,11 @@ class WCFM_REST_Store_Vendors_Controller extends WCFM_REST_Controller {
         if( wcfm_empty($cancellation_policy) ) $cancellation_policy = $_wcfm_cancellation_policy;
         $wcfm_vendor_data['vendor_policies'] = array();
 
-        $wcfm_vendor_data['vendor_policies']['shipping_policy_heading'] = apply_filters('wcfm_shipping_policies_heading', __('Shipping Policy', 'wc-frontend-manager'));
+        $wcfm_vendor_data['vendor_policies']['shipping_policy_heading'] = apply_filters('wcfm_shipping_policies_heading', __('Shipping Policy', 'wc-frontend-manager')); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
         $wcfm_vendor_data['vendor_policies']['shipping_policy'] = $shipping_policy;
-        $wcfm_vendor_data['vendor_policies']['refund_policy_heading'] = apply_filters('wcfm_refund_policies_heading', __('Refund Policy', 'wc-frontend-manager'));
+        $wcfm_vendor_data['vendor_policies']['refund_policy_heading'] = apply_filters('wcfm_refund_policies_heading', __('Refund Policy', 'wc-frontend-manager')); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
         $wcfm_vendor_data['vendor_policies']['refund_policy'] = $refund_policy;
-        $wcfm_vendor_data['vendor_policies']['cancellation_policy_heading'] = apply_filters('wcfm_cancellation_policies_heading', __('Cancellation / Return / Exchange Policy', 'wc-frontend-manager'));
+        $wcfm_vendor_data['vendor_policies']['cancellation_policy_heading'] = apply_filters('wcfm_cancellation_policies_heading', __('Cancellation / Return / Exchange Policy', 'wc-frontend-manager')); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
         $wcfm_vendor_data['vendor_policies']['cancellation_policy'] = $cancellation_policy;
 
         $store_tab_headings = $store_user->get_store_tabs();

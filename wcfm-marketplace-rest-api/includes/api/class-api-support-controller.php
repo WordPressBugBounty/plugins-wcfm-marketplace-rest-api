@@ -113,7 +113,7 @@ class WCFM_REST_Support_Controller extends WCFM_REST_Controller {
     global $WCFM, $WCFMu;
     $_POST["controller"] = 'wcfm-support';
     $_POST['length'] = !empty($request['per_page']) ? intval($request['per_page']) : 10;
-    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0;
+    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- False positive
     $_POST['support_status'] = !empty($request['support_status']) ? $request['support_status'] : '';
     $_POST['support_product'] = !empty($request['support_product']) ? $request['support_product'] : '';
     $_POST['support_vendor'] = !empty($request['support_vendor']) ? $request['support_vendor'] : '';
@@ -148,9 +148,9 @@ class WCFM_REST_Support_Controller extends WCFM_REST_Controller {
       $response[$key]['support_id_to_display'] = sprintf( '%06u', $wcfm_supports_single->ID );
       //Status
       if( $wcfm_supports_single->status == 'open' ) {
-        $response[$key]['support_status'] =  __( 'Open', 'wc-frontend-manager-ultimate' );
+        $response[$key]['support_status'] =  __( 'Open', 'wc-frontend-manager-ultimate' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager-ultimate
       } else {
-        $response[$key]['support_status'] =  __( 'Closed', 'wc-frontend-manager-ultimate' );
+        $response[$key]['support_status'] =  __( 'Closed', 'wc-frontend-manager-ultimate' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager-ultimate
       }
       // Category
       $response[$key]['support_category'] =  $wcfm_supports_single->category;

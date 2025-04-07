@@ -99,7 +99,7 @@ class WCFM_REST_Settings_Controller extends WCFM_REST_Controller {
     }
     $vendor_id = $user->ID;
     if ( empty( $vendor_id ) ) {
-      return new WP_Error( 'no_vendor_store_found', __( 'No vendor store found', 'wc-frontend-manager-rest-api' ), array( 'status' => 404 ) );
+      return new WP_Error( 'no_vendor_store_found', __( 'No vendor store found', 'wcfm-marketplace-rest-api' ), array( 'status' => 404 ) );
     }
     return $vendor_id;
   }

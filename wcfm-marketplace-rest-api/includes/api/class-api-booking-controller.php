@@ -191,7 +191,7 @@ class WCFM_REST_Booking_Controller extends WCFM_REST_Controller {
     $_POST["controller"] = 'wcfm-bookings';
     
     $_POST['length'] = !empty($request['per_page']) ? intval($request['per_page']) : 10;
-    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0;
+    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- False positive
 
     $_POST['filter_date_form'] = !empty($request['after']) ? $request['after'] : '';
     $_POST['filter_date_to'] = !empty($request['before']) ? $request['before'] : '';

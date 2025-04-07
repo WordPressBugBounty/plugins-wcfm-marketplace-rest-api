@@ -215,7 +215,7 @@ class WCFM_REST_Order_Controller extends WCFM_REST_Controller {
     global $WCFM;
     $_POST["controller"] = 'wcfm-orders';
     $_POST['length'] = !empty($request['per_page']) ? intval($request['per_page']) : 10;
-    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0;
+    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- False positive
 //    if(empty($request['page'])){
 //      $_POST['start'] = !empty($request['offset']) ? intval($request['offset']) : 0;
 //    }
@@ -285,7 +285,7 @@ class WCFM_REST_Order_Controller extends WCFM_REST_Controller {
     $data['user_delivery_location'] = $object->get_meta('_wcfmmp_user_location', true);
     $wcfmd_delvery_times = $object->get_meta('_wcfmd_delvery_times', true);
     if( !empty(  $wcfmd_delvery_times ) ) {
-      $data['user_delivery_time'] = date('Y-m-d H:i:s', $wcfmd_delvery_times[$each_order_vendor_id]);
+      $data['user_delivery_time'] = date('Y-m-d H:i:s', $wcfmd_delvery_times[$each_order_vendor_id]); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date -- Adapt gmdate() instead of date() if possible
     }    
     
     // Format line items.
@@ -494,11 +494,11 @@ class WCFM_REST_Order_Controller extends WCFM_REST_Controller {
 
       if( $admin_fee_mode ) {
 
-        return __( 'Fees', 'wc-frontend-manager' );
+        return __( 'Fees', 'wc-frontend-manager' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
 
       } else {
 
-        return __( 'Earning', 'wc-frontend-manager' );
+        return __( 'Earning', 'wc-frontend-manager' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
 
       }
 
@@ -542,23 +542,23 @@ class WCFM_REST_Order_Controller extends WCFM_REST_Controller {
 
       $variation_id = wc_get_order_item_meta( $item->get_id(), '_variation_id', true );
 
-    }    
+    }
 
-    $sql = "
+    $sql = $wpdb->prepare(
+      "SELECT item_id, is_refunded, commission_amount AS line_total, shipping AS total_shipping, tax, shipping_tax_amount
+        FROM {$wpdb->prefix}wcfm_marketplace_orders
+        WHERE (product_id = %d OR variation_id = %d)
+        AND order_id = %d
+        AND item_id = %d
+        AND vendor_id = %d",
+      $product_id,
+      $variation_id,
+      $order->get_id(),
+      $item->get_id(),
+      $vendor_id
+    );
 
-      SELECT item_id, is_refunded, commission_amount AS line_total, shipping AS total_shipping, tax, shipping_tax_amount 
-
-      FROM {$wpdb->prefix}wcfm_marketplace_orders
-
-      WHERE (product_id = " . $product_id . " OR variation_id = " . $variation_id . ")
-
-      AND   order_id    = " . $order->get_id() . "
-
-      AND   item_id     = " . $item->get_id() . "
-
-      AND   `vendor_id` = " . $vendor_id;
-
-    $order_line_due = $wpdb->get_results( $sql );
+    $order_line_due = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- False positive, input is properly escaped.
 
     
 
@@ -915,7 +915,7 @@ class WCFM_REST_Order_Controller extends WCFM_REST_Controller {
 
             if( isset( $attachment['attachmentData'] ) && !empty( $attachment['attachmentData'] ) ) {
 
-              $name = !empty( $attachment['attachmentText'] ) ? $attachment['attachmentText'] : __  ( 'Attachment', 'wc-frontend-manager-ultimate' ) . ' ' . $index;
+              $name = !empty( $attachment['attachmentText'] ) ? $attachment['attachmentText'] : __  ( 'Attachment', 'wc-frontend-manager-ultimate' ) . ' ' . $index; // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager-ultimate
 
               if( $index != 0  ) $note .= ',&nbsp;';
 
@@ -927,7 +927,7 @@ class WCFM_REST_Order_Controller extends WCFM_REST_Controller {
 
           if( !empty( $attachment_data ) ) {
 
-            $note .= "<br />" . __  ( 'Attachments', 'wc-frontend-manager-ultimate' ) . ': ' . $attachment_data;
+            $note .= "<br />" . __  ( 'Attachments', 'wc-frontend-manager-ultimate' ) . ': ' . $attachment_data; // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager-ultimate
 
           }
 
@@ -947,7 +947,8 @@ class WCFM_REST_Order_Controller extends WCFM_REST_Controller {
 
         if( apply_filters( 'wcfmmp_is_allow_sold_by', true, $user_id ) && $WCFM->wcfm_vendor_support->wcfm_vendor_has_capability( $user_id, 'sold_by' ) && apply_filters( 'wcfm_is_allow_order_note_vendor_reference', true ) ) {
 
-          $note = sprintf( __( '%s has added the following note', 'wc-frontend-manager-ultimate' ), wcfm_get_vendor_store( $user_id ) ) . ': ' . "<br />"  . $note;
+          /* translators: %s is the vendor store. */
+          $note = sprintf( __( '%s has added the following note', 'wc-frontend-manager-ultimate' ), wcfm_get_vendor_store( $user_id ) ) . ': ' . "<br />"  . $note; // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager-ultimate
 
         }
 

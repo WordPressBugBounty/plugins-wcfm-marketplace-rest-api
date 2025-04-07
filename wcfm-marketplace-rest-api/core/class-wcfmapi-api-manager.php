@@ -93,11 +93,11 @@ class WCFMapi_API_Manager {
       if( apply_filters( 'wcfm_is_pref_policies', true ) && apply_filters( 'wcfm_is_allow_product_policies', true ) ) {
         $data['wcfm_product_policy_data']['visible'] = true;
         $data['wcfm_product_policy_data']['shipping_policy'] = $WCFM->wcfm_policy->get_shipping_policy( $object->get_id() );
-        $data['wcfm_product_policy_data']['shipping_policy_heading'] = apply_filters('wcfm_shipping_policies_heading', __('Shipping Policy', 'wc-frontend-manager'));
+        $data['wcfm_product_policy_data']['shipping_policy_heading'] = apply_filters('wcfm_shipping_policies_heading', __('Shipping Policy', 'wc-frontend-manager')); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
         $data['wcfm_product_policy_data']['refund_policy'] = $WCFM->wcfm_policy->get_refund_policy( $object->get_id() );
-        $data['wcfm_product_policy_data']['refund_policy_heading'] = apply_filters('wcfm_refund_policies_heading', __('Refund Policy', 'wc-frontend-manager'));
+        $data['wcfm_product_policy_data']['refund_policy_heading'] = apply_filters('wcfm_refund_policies_heading', __('Refund Policy', 'wc-frontend-manager')); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
         $data['wcfm_product_policy_data']['cancellation_policy'] = $WCFM->wcfm_policy->get_cancellation_policy( $object->get_id() );
-        $data['wcfm_product_policy_data']['cancellation_policy_heading'] = apply_filters('wcfm_cancellation_policies_heading', __('Cancellation / Return / Exchange Policy', 'wc-frontend-manager'));
+        $data['wcfm_product_policy_data']['cancellation_policy_heading'] = apply_filters('wcfm_cancellation_policies_heading', __('Cancellation / Return / Exchange Policy', 'wc-frontend-manager')); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
         $data['wcfm_product_policy_data']['tab_title'] = $WCFM->wcfm_policy->get_policy_tab_title( $object->get_id() );
       }
       // $data['store'] = array(

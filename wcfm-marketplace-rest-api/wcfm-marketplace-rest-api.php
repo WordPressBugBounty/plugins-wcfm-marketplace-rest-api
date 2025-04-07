@@ -1,19 +1,21 @@
 <?php
 
 /**
- * Plugin Name: WCFM - WooCommerce Multivendor Marketplace - REST API
+ * Plugin Name: WCFM - Multivendor Marketplace REST API for WooCommerce
  * Plugin URI: https://wclovers.github.io/wcfm-rest-api/
  * Description: Most featured and flexible marketplace solution for your e-commerce store. Simply and Smoothly.
  * Author: WC Lovers
- * Version: 1.6.2
+ * Version: 1.6.3
  * Author URI: https://wclovers.com
  *
  * Text Domain: wcfm-marketplace-rest-api
  * Domain Path: /lang/
  *
  * WC requires at least: 3.0.0
- * WC tested up to: 7.6.0
+ * WC tested up to: 9.7.0
  *
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly

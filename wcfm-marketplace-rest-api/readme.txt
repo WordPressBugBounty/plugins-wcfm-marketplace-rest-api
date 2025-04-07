@@ -1,13 +1,13 @@
-﻿=== WooCommerce Multivendor Marketplace - REST API ===
+﻿=== WCFM - Multivendor Marketplace REST API for WooCommerce ===
 Contributors: wclovers
 Tags: woocommerce marketplace api, rest api, remote api, http api
 Donate link: https://www.paypal.me/wclovers/25usd
 Requires at least: 4.4
-Tested up to: 6.4.2
+Tested up to: 6.7
 WC requires at least: 3.0
-WC tested up to: 8.4.0
-Requires PHP: 5.6
-Stable tag: 1.6.2
+WC tested up to: 9.7.0
+Requires PHP: 7.4
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -164,11 +164,11 @@ NONE.
 
 == Changelog ==
 
-= 1.6.2 =
-* Updated - 27/12/2023 *
+= 1.6.3 =
+* Updated - 06/04/2025 *
 
-* Made compatible with WooCommerce HPOS.
-* PHP Warning message fixed - invalid argument
+* Fixed - Authenticated SQL Injection vulnerability caused by some insecured database queries, reported by - "Phat RiO - BlueRock" [Wordfence]
+* Fixed - The following Warnings & Errors reported by phpcs tool - WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.TextDomainMismatch, WordPress.WP.I18n.UnorderedPlaceholdersText, plugin_header_no_license, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.DB.PreparedSQL.NotPrepared, outdated_tested_upto_header, stable_tag_mismatch, WordPress.WP.AlternativeFunctions.strip_tags_strip_tags, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.DateTime.RestrictedFunctions.date_date, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.WP.DeprecatedParameters.Get_termsParam2Found, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.Security.EscapeOutput.ExceptionNotEscaped, mismatched_plugin_name, trademarked_term -> WooCommerce
 
 = 1.6.1 =
 * Updated - 04/05/2023 *
@@ -390,7 +390,7 @@ NONE.
 
 == Upgrade Notice ==
 
-= 1.6.2 =
+= 1.6.3 =
 
-* Made compatible with WooCommerce HPOS.
-* PHP Warning message fixed - invalid argument
+* Fixed - Authenticated SQL Injection vulnerability caused by some insecured database queries, reported by - "Phat RiO - BlueRock" [Wordfence]
+* Fixed - The following Warnings & Errors reported by phpcs tool - WordPress.WP.I18n.MissingTranslatorsComment, WordPress.WP.I18n.TextDomainMismatch, WordPress.WP.I18n.UnorderedPlaceholdersText, plugin_header_no_license, WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.DB.PreparedSQL.NotPrepared, outdated_tested_upto_header, stable_tag_mismatch, WordPress.WP.AlternativeFunctions.strip_tags_strip_tags, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.DateTime.RestrictedFunctions.date_date, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.WP.DeprecatedParameters.Get_termsParam2Found, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.Security.EscapeOutput.ExceptionNotEscaped, mismatched_plugin_name, trademarked_term -> WooCommerce

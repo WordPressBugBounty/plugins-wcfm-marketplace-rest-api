@@ -367,7 +367,7 @@ class WCFM_REST_Product_Controller extends WCFM_REST_Controller {
 
             if ( is_wp_error( $upload ) ) {
               if ( ! apply_filters( 'woocommerce_rest_suppress_image_upload_error', false, $upload, $product->get_id(), $images ) ) {
-                throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 );
+                throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- false poitive
               } else {
                 continue;
               }
@@ -378,7 +378,7 @@ class WCFM_REST_Product_Controller extends WCFM_REST_Controller {
 
           if ( ! wp_attachment_is_image( $attachment_id ) ) {
             /* translators: %s: image ID */
-            throw new WC_REST_Exception( 'woocommerce_product_invalid_image_id', sprintf( __( '#%s is an invalid image ID.', 'woocommerce' ), $attachment_id ), 400 );
+            throw new WC_REST_Exception( 'woocommerce_product_invalid_image_id', sprintf( __( '#%s is an invalid image ID.', 'woocommerce' ), $attachment_id ), 400 ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch, WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Intentional reuse of existing translation from woocommerce, false poitive
           }
 
           $featured_image = $product->get_image_id();
@@ -1288,25 +1288,30 @@ class WCFM_REST_Product_Controller extends WCFM_REST_Controller {
         $product_ids[] = $product;
       }
 
-      $product_id_in = implode(',', $product_ids);
-      if(!empty($product_id_in)) {
-        $sql = "
-          SELECT min( min_price ) as min_price, MAX( max_price ) as max_price
-          FROM {$wpdb->wc_product_meta_lookup}
-          WHERE product_id IN (" . $product_id_in . ")";
-        } else {
-          $sql = "
-            SELECT min( min_price ) as min_price, MAX( max_price ) as max_price
-            FROM {$wpdb->wc_product_meta_lookup}";
-        }
-      
+      if (!empty($product_ids)) {
+        // Create placeholders for each product_id
+        $placeholders = implode(',', array_fill(0, count($product_ids), '%d'));
 
-      $price_result = $wpdb->get_row( $sql ); // WPCS: unprepared SQL ok.
+        // Prepare the query with placeholders
+        $sql = $wpdb->prepare(
+          "SELECT MIN(min_price) AS min_price, MAX(max_price) AS max_price
+          FROM {$wpdb->wc_product_meta_lookup}
+          WHERE product_id IN ($placeholders)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- False positive.
+          ...$product_ids
+        );
+      } else {
+        // No product IDs, fetch min/max prices for all products
+        $sql = "SELECT MIN(min_price) AS min_price, MAX(max_price) AS max_price 
+                FROM {$wpdb->wc_product_meta_lookup}";
+      }
+
+      $price_result = $wpdb->get_row( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- False positive, input is properly escaped.
 
       $prepared_args = array(
+        'taxonomy'  => 'product_cat',
         // 'search'     => $request['search']
       );
-      $category_result = get_terms( 'product_cat', $prepared_args );
+      $category_result = get_terms( $prepared_args );
 
       $categories = array_values($category_result);
       $attributes = array();
@@ -1387,7 +1392,8 @@ class WCFM_REST_Product_Controller extends WCFM_REST_Controller {
       }
       
       // Generate a useful post title
-      $variation_post_title = sprintf( __( 'Variation #%s of %s', 'woocommerce' ), absint( $variation_id ), esc_html( get_the_title( $product_id ) ) );
+      /* translators: 1. is the variation id, 2. is the product title. */
+      $variation_post_title = sprintf( __( 'Variation #%1$s of %2$s', 'woocommerce' ), absint( $variation_id ), esc_html( get_the_title( $product_id ) ) ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
       
       if ( ! $variation_id ) { // Adding New Variation
         $variation = array(

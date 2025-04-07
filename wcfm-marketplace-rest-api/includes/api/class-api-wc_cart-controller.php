@@ -237,7 +237,7 @@ class WCFM_REST_WC_Cart_Controller extends WCFM_REST_Controller {
                 'show_package_details'     => count( $packages ) > 1,
                 'package_details'          => implode( ', ', $product_names ),
                 /* translators: %d: shipping package number */
-                'package_name'             => apply_filters( 'woocommerce_shipping_package_name', ( ( $i + 1 ) > 1 ) ? sprintf( _x( 'Shipping %d', 'shipping packages', 'woocommerce' ), ( $i + 1 ) ) : _x( 'Shipping', 'shipping packages', 'woocommerce' ), $i, $package ),
+                'package_name'             => apply_filters( 'woocommerce_shipping_package_name', ( ( $i + 1 ) > 1 ) ? sprintf( _x( 'Shipping %d', 'shipping packages', 'woocommerce' ), ( $i + 1 ) ) : _x( 'Shipping', 'shipping packages', 'woocommerce' ), $i, $package ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
                 'index'                    => $i,
                 'chosen_method'            => $chosen_method,
                 'formatted_destination'    => WC()->countries->get_formatted_address( $package['destination'], ', ' ),

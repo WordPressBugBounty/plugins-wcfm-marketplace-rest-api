@@ -162,9 +162,9 @@ class WCFM_REST_WC_Checkout_Controller extends WCFM_REST_Controller {
     $return_object = array();
     
     $checkout = WC()->checkout();
-    $checkout_title = __( 'Billing details', 'woocommerce' );
+    $checkout_title = __( 'Billing details', 'woocommerce' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
     if ( wc_ship_to_billing_address_only() && WC()->cart->needs_shipping() ) {
-        $checkout_title = __( 'Billing &amp; Shipping', 'woocommerce' );
+        $checkout_title = __( 'Billing &amp; Shipping', 'woocommerce' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from woocommerce
     }
     $return_object['title'] = $checkout_title;
 

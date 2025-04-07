@@ -106,7 +106,7 @@ class WCFM_REST_Review_Controller extends WCFM_REST_Controller {
     global $WCFM, $WCFMmp;
     $_POST["controller"] = 'wcfm-reviews';
     $_POST['length'] = !empty($request['per_page']) ? intval($request['per_page']) : 10;
-    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0;
+    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- False positive
     $_POST['orderby'] = !empty($request['orderby']) ? $request['orderby'] : '';
     $_POST['order'] = !empty($request['order']) ? $request['order'] : '';
     $_POST['status_type'] = !empty($request['status_type']) ? $request['status_type'] : '';
@@ -129,7 +129,10 @@ class WCFM_REST_Review_Controller extends WCFM_REST_Controller {
     
     global $WCFM, $WCFMmp, $wpdb;
     
-    $review_data = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wcfm_marketplace_reviews WHERE `ID`= " . absint( $request['id'] ) ); 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- False positive.
+    $review_data = $wpdb->get_row( 
+      $wpdb->prepare("SELECT * FROM {$wpdb->prefix}wcfm_marketplace_reviews WHERE `ID`= %d", absint( $request['id'] )) 
+    ); 
     if(!$review_data || empty( $review_data ) || !is_object( $review_data )) {
       return new WP_Error( "wcfmapi_rest_invalid_review_id", sprintf( __( "Invalid ID", 'wcfm-marketplace-rest-api' ), __METHOD__ ), array( 'status' => 404 ) );
     } else {

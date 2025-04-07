@@ -77,6 +77,7 @@ class WCFM_REST_Product_Categories_Controller extends WCFM_REST_Controller {
 
       $taxonomy      = $this->get_taxonomy( $request );
       $prepared_args = array(
+        'taxonomy'   => $taxonomy,
         'exclude'    => $request['exclude'],
         'include'    => $request['include'],
         'order'      => $request['order'],
@@ -119,7 +120,7 @@ class WCFM_REST_Product_Categories_Controller extends WCFM_REST_Controller {
       if ( ! empty( $prepared_args['product'] ) ) {
         $query_result = $this->get_terms_for_product( $prepared_args, $request );
       } else {
-        $query_result = get_terms( $taxonomy, $prepared_args );
+        $query_result = get_terms( $prepared_args );
       }
       $response = array();
       foreach ( $query_result as $term ) {

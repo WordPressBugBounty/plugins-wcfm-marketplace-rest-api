@@ -118,7 +118,7 @@ class WCFM_REST_Enquiry_Controller extends WCFM_REST_Controller {
     global $WCFM;
     $_POST["controller"] = 'wcfm-enquiry';
     $_POST['length'] = !empty($request['per_page']) ? intval($request['per_page']) : 10;
-    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0;
+    $_POST['start'] = !empty($request['page']) ? ( intval($request['page']) - 1 ) * $_POST['length'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- False positive
     $_POST['orderby'] = !empty($request['orderby']) ? $request['orderby'] : '';
     $_POST['order'] = !empty($request['order']) ? $request['order'] : '';
     $_REQUEST['wcfm_ajax_nonce'] = wp_create_nonce( 'wcfm_ajax_nonce' );
@@ -152,7 +152,7 @@ class WCFM_REST_Enquiry_Controller extends WCFM_REST_Controller {
       return new WP_Error( "wcfmapi_rest_invalid_enquiry_id", sprintf( __( "Invalid ID", 'wcfm-marketplace-rest-api' ), __METHOD__ ), array( 'status' => 404 ) );
     }
 
-    $enquiry_datas = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wcfm_enquiries WHERE `ID` = {$inquiry_id}" );
+    $enquiry_datas = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wcfm_enquiries WHERE `ID` = %d", $inquiry_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- False positive.
 
     if( empty($enquiry_datas ) ) {
       return new WP_Error( "wcfmapi_rest_invalid_enquiry_id", sprintf( __( "Invalid ID", 'wcfm-marketplace-rest-api' ), __METHOD__ ), array( 'status' => 404 ) );
@@ -166,11 +166,11 @@ class WCFM_REST_Enquiry_Controller extends WCFM_REST_Controller {
 
     $inquiry_vendor_id = $enquiry_datas[0]->vendor_id;
 
-    $enquiry_meta_values = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}wcfm_enquiries_meta WHERE `enquiry_id` = " . $inquiry_id);
+    $enquiry_meta_values = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wcfm_enquiries_meta WHERE `enquiry_id` = %d", $inquiry_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- False positive.
     $enquiry_datas[0]->additional_datas = $enquiry_meta_values;
 
     if( $wcfm_is_allow_view_enquiry_reply_view = apply_filters( 'wcfmcap_is_allow_enquiry_reply_view', true ) ) {
-      $wcfm_enquiry_replies = $wpdb->get_results( "SELECT * from {$wpdb->prefix}wcfm_enquiries_response WHERE `enquiry_id` = " . $inquiry_id );
+      $wcfm_enquiry_replies = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wcfm_enquiries_response WHERE `enquiry_id` = %d", $inquiry_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- False positive.
       if( !empty( $wcfm_enquiry_replies ) ) {
         foreach( $wcfm_enquiry_replies as $key => $wcfm_enquiry_reply ) {
           $author_id = $wcfm_enquiry_reply->reply_by;

@@ -93,7 +93,7 @@ class WCFM_REST_Deliveries_Controller extends WCFM_REST_Controller {
 
     $_POST["controller"] = 'wcfm-delivery-boys-stats';
     $_POST['length'] = !empty($request['per_page']) ? intval($request['per_page']) : 10;
-    $_POST['start'] = !empty($request['page']) ? (intval($request['page']) - 1) * $_POST['length'] : 0;
+    $_POST['start'] = !empty($request['page']) ? (intval($request['page']) - 1) * $_POST['length'] : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- False positive
     $_POST['status_type'] = !empty($request['delivery_status']) ? $request['delivery_status'] : '';
     $_POST['wcfm_delivery_boy'] = !empty($request['wcfm_delivery_boy']) ? intval($request['wcfm_delivery_boy']) : get_current_user_id();
 
@@ -101,7 +101,7 @@ class WCFM_REST_Deliveries_Controller extends WCFM_REST_Controller {
     $response = array();
     //$wcfm_delivery_orders_json_arr = array();
     $_REQUEST['wcfm_ajax_nonce'] = wp_create_nonce('wcfm_ajax_nonce');
-    define('WCFM_REST_API_CALL', TRUE);
+    if(!defined('WCFM_REST_API_CALL')) define('WCFM_REST_API_CALL', TRUE);
     $WCFM->init();
     //$WCFMd->init_wcfmd();
     //print_r( $_POST );
@@ -240,23 +240,25 @@ class WCFM_REST_Deliveries_Controller extends WCFM_REST_Controller {
           $username = '';
 
           if ($user_info->first_name || $user_info->last_name) {
-            $username .= esc_html(sprintf(_x('%1$s %2$s', 'full name', 'wc-frontend-manager'), ucfirst($user_info->first_name), ucfirst($user_info->last_name)));
+            /* translators: %1$s is the user's first name, %2$s is the user's last name. */
+            $username .= esc_html(sprintf(_x('%1$s %2$s', 'full name', 'wc-frontend-manager'), ucfirst($user_info->first_name), ucfirst($user_info->last_name))); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
           } else {
             $username .= esc_html(ucfirst($user_info->display_name));
           }
         } else {
           if ($the_order->get_billing_first_name() || $the_order->get_billing_last_name()) {
-            $username = trim(sprintf(_x('%1$s %2$s', 'full name', 'wc-frontend-manager'), $the_order->get_billing_first_name(), $the_order->get_billing_last_name()));
+            /* translators: %1$s is the user's first name, %2$s is the user's last name. */
+            $username = trim(sprintf(_x('%1$s %2$s', 'full name', 'wc-frontend-manager'), $the_order->get_billing_first_name(), $the_order->get_billing_last_name())); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
           } else if ($the_order->get_billing_company()) {
             $username = trim($the_order->get_billing_company());
           } else {
-            $username = __('Guest', 'wc-frontend-manager');
+            $username = __('Guest', 'wc-frontend-manager'); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
           }
         }
 
         $username = apply_filters('wcfm_order_by_user', $username, $the_order->get_id());
       } else {
-        $username = __('Guest', 'wc-frontend-manager');
+        $username = __('Guest', 'wc-frontend-manager'); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing translation from wc-frontend-manager
       }
 
       $response[$key]['customer']['name'] = $username;
@@ -343,8 +345,8 @@ class WCFM_REST_Deliveries_Controller extends WCFM_REST_Controller {
       foreach ($delivery_ids as $key => $delivery_id) {
         $sql  = "SELECT * FROM `{$wpdb->prefix}wcfm_delivery_orders`";
         $sql .= " WHERE 1=1";
-        $sql .= " AND ID = {$delivery_id}";
-        $wcfm_delivery_orders_array = array_merge($wcfm_delivery_orders_array, $wpdb->get_results($sql));
+        $sql .= " AND ID = %d";
+        $wcfm_delivery_orders_array = array_merge($wcfm_delivery_orders_array, $wpdb->get_results($wpdb->prepare($sql, $delivery_id))); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- False positive, input is properly escaped.
       }
     }
     //print_r($wcfm_delivery_orders_array);
